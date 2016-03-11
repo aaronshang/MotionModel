@@ -109,26 +109,33 @@ static const NSTimeInterval gyroMin = 0.1;
     CMMotionManager *mManager = [(APLAppDelegate *)[[UIApplication sharedApplication] delegate] sharedManager];
 
     APLGyroGraphViewController * __weak weakSelf = self;
-    if ([mManager isGyroAvailable] == YES) {
-        [mManager setGyroUpdateInterval:updateInterval];
-        [mManager startGyroUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMGyroData *gyroData, NSError *error) {
-            [weakSelf.graphView addX:gyroData.rotationRate.x y:gyroData.rotationRate.y z:gyroData.rotationRate.z];
-            [weakSelf setLabelValueX:gyroData.rotationRate.x y:gyroData.rotationRate.y z:gyroData.rotationRate.z];
+    if ([mManager isAccelerometerAvailable] == YES) {
+        [mManager setAccelerometerUpdateInterval:updateInterval];
+        [mManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
+            [weakSelf.graphView addX:accelerometerData.acceleration.x y:accelerometerData.acceleration.y z:accelerometerData.acceleration.z];
+            [weakSelf setLabelValueX:accelerometerData.acceleration.x y:accelerometerData.acceleration.y z:accelerometerData.acceleration.z];
             
             weakSelf.sample++;
             [weakSelf.mMAry addObject:@{@"interval":@(updateInterval),
-                                    @"x":@(gyroData.rotationRate.x),
-                                    @"y":@(gyroData.rotationRate.y),
-                                    @"z":@(gyroData.rotationRate.z),
-                                    @"sample":@(_sample),
-                                    @"state":@(_state)}];
+                                        @"x":@(accelerometerData.acceleration.x),
+                                        @"y":@(accelerometerData.acceleration.y),
+                                        @"z":@(accelerometerData.acceleration.z),
+                                        @"sample":@(_sample),
+                                        @"state":@(_state)}];
             
             if (_state!=0) {
                 _state = 0;
             }
-
         }];
     }
+    
+//    if ([mManager isGyroAvailable] == YES) {
+//        [mManager setGyroUpdateInterval:updateInterval];
+//        [mManager startGyroUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMGyroData *gyroData, NSError *error) {
+//            [weakSelf.graphView addX:gyroData.rotationRate.x y:gyroData.rotationRate.y z:gyroData.rotationRate.z];
+//            [weakSelf setLabelValueX:gyroData.rotationRate.x y:gyroData.rotationRate.y z:gyroData.rotationRate.z];
+//        }];
+//    }
 
     self.updateIntervalLabel.text = [NSString stringWithFormat:@"%.2f", updateInterval];
 }
