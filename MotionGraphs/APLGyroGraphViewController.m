@@ -51,6 +51,7 @@
 #import "APLAppDelegate.h"
 #import "APLGraphView.h"
 #import "SaveFile.h"
+#import "SWAI.h"
 
 static const NSTimeInterval gyroMin = 0.1;
 
@@ -63,6 +64,8 @@ static const NSTimeInterval gyroMin = 0.1;
 @property (nonatomic, assign) NSInteger state;//1，启动；2，停止
 
 @property (nonatomic, assign) BOOL isCreateFile;//是否创建了文件
+
+@property(nonatomic, strong) SWAI *swAI;
 @end
 
 
@@ -80,6 +83,8 @@ static const NSTimeInterval gyroMin = 0.1;
     
     [self.fileBtn addTarget:self action:@selector(operateFile) forControlEvents:UIControlEventTouchUpInside];
     self.isCreateFile = NO;
+    
+    self.swAI = [[SWAI alloc] init];
 }
 
 -(void) operateFile{
@@ -116,27 +121,28 @@ static const NSTimeInterval gyroMin = 0.1;
             [weakSelf setLabelValueX:accelerometerData.acceleration.x y:accelerometerData.acceleration.y z:accelerometerData.acceleration.z];
             
             weakSelf.sample++;
+            
+            ESuyWayState curState = [weakSelf.swAI getStateWithX:accelerometerData.acceleration.x withY:accelerometerData.acceleration.y];
+            
             [weakSelf.mMAry addObject:@{@"interval":@(updateInterval),
                                         @"x":@(accelerometerData.acceleration.x),
                                         @"y":@(accelerometerData.acceleration.y),
                                         @"z":@(accelerometerData.acceleration.z),
                                         @"sample":@(_sample),
-                                        @"state":@(_state)}];
+                                        @"state":@(_state),
+                                        @"sk_judge":@(curState)}];
             
             if (_state!=0) {
                 _state = 0;
             }
+            
+            if (curState == ESW_Start  || curState == ESW_Stop) {
+                [weakSelf showCarState:curState];
+            }
         }];
     }
     
-//    if ([mManager isGyroAvailable] == YES) {
-//        [mManager setGyroUpdateInterval:updateInterval];
-//        [mManager startGyroUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMGyroData *gyroData, NSError *error) {
-//            [weakSelf.graphView addX:gyroData.rotationRate.x y:gyroData.rotationRate.y z:gyroData.rotationRate.z];
-//            [weakSelf setLabelValueX:gyroData.rotationRate.x y:gyroData.rotationRate.y z:gyroData.rotationRate.z];
-//        }];
-//    }
-
+    
     self.updateIntervalLabel.text = [NSString stringWithFormat:@"%.2f", updateInterval];
 }
 
@@ -147,6 +153,20 @@ static const NSTimeInterval gyroMin = 0.1;
 
     if ([mManager isGyroActive] == YES) {
         [mManager stopGyroUpdates];
+    }
+}
+
+-(void) showCarState:(ESuyWayState) state{
+    
+    NSDate *curDate = [NSDate date];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"hh:mm"];
+    NSString *timeStr = [formatter stringFromDate:curDate];
+    
+    if (state == ESW_Start) {
+        self.carStateLabel.text = [NSString stringWithFormat:@"%@ 起动",timeStr];
+    }else if(state == ESW_Stop){
+        self.carStateLabel.text = [NSString stringWithFormat:@"%@ 到站",timeStr];
     }
 }
 

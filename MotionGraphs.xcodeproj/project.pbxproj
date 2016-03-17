@@ -25,6 +25,7 @@
 		28DDCA1015F85C5D00570985 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28DDCA0F15F85C5D00570985 /* CoreMotion.framework */; };
 		28EB72EA160506340094726B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 28EB72EC160506340094726B /* Localizable.strings */; };
 		93ADB6241C914F9600882D65 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93ADB6231C914F9600882D65 /* Images.xcassets */; settings = {ASSET_TAGS = (); }; };
+		93C310A01C9959E300950233 /* SWAI.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C3109F1C9959E300950233 /* SWAI.m */; settings = {ASSET_TAGS = (); }; };
 		93E9F9861C900D50008EAC31 /* SaveFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 93E9F9851C900D50008EAC31 /* SaveFile.m */; settings = {ASSET_TAGS = (); }; };
 		E109BBF615FEA92A00EF9AD0 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E109BBF415FEA90A00EF9AD0 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
@@ -58,6 +59,8 @@
 		28EB72E71605028C0094726B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MotionGraphsStoryboard.storyboard; sourceTree = "<group>"; };
 		28EB72EB160506340094726B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		93ADB6231C914F9600882D65 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		93C3109E1C9959E300950233 /* SWAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAI.h; sourceTree = "<group>"; };
+		93C3109F1C9959E300950233 /* SWAI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAI.m; sourceTree = "<group>"; };
 		93E9F9841C900D50008EAC31 /* SaveFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveFile.h; sourceTree = "<group>"; };
 		93E9F9851C900D50008EAC31 /* SaveFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SaveFile.m; sourceTree = "<group>"; };
 		E109BBF415FEA90A00EF9AD0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.0.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -112,6 +115,8 @@
 			isa = PBXGroup;
 			children = (
 				93E9F9841C900D50008EAC31 /* SaveFile.h */,
+				93C3109E1C9959E300950233 /* SWAI.h */,
+				93C3109F1C9959E300950233 /* SWAI.m */,
 				93E9F9851C900D50008EAC31 /* SaveFile.m */,
 				2801A91F15FF95D5006B74F3 /* ReadMe.txt */,
 				28DDC9B815F858BB00570985 /* APLAppDelegate.h */,
@@ -223,6 +228,7 @@
 				28DDC9D115F859B000570985 /* APLGraphView.m in Sources */,
 				93E9F9861C900D50008EAC31 /* SaveFile.m in Sources */,
 				2852E50C15FB1A420093D0E7 /* APLAccelerometerGraphViewController.m in Sources */,
+				93C310A01C9959E300950233 /* SWAI.m in Sources */,
 				2852E51615FB1E3C0093D0E7 /* APLDeviceMotionGraphViewController.m in Sources */,
 				2806993415FD47DC008A50C0 /* APLGyroGraphViewController.m in Sources */,
 			);

@@ -51,6 +51,9 @@ Copyright (C) 2012 Apple Inc. All Rights Reserved.
 
 @interface APLGyroGraphViewController : APLGraphViewController
 @property(nonatomic, strong) IBOutlet UIButton *fileBtn;
+
+@property(nonatomic, strong) IBOutlet UILabel *carStateLabel;
+
 -(IBAction) runing:(id)sender;
 
 -(IBAction) carStart:(id)sender;
