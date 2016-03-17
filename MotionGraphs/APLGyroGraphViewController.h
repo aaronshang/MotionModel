@@ -54,10 +54,14 @@ Copyright (C) 2012 Apple Inc. All Rights Reserved.
 
 @property(nonatomic, strong) IBOutlet UILabel *carStateLabel;
 
+-(IBAction) playback:(id)sender;
+
 -(IBAction) runing:(id)sender;
 
 -(IBAction) carStart:(id)sender;
 
 -(IBAction) carStop:(id)sender;
+
+-(IBAction) reportError:(id)sender;
 
 @end

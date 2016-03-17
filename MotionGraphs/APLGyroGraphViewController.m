@@ -66,6 +66,7 @@ static const NSTimeInterval gyroMin = 0.1;
 @property (nonatomic, assign) BOOL isCreateFile;//是否创建了文件
 
 @property(nonatomic, strong) SWAI *swAI;
+@property(nonatomic, assign) BOOL playbackMode;
 @end
 
 
@@ -85,6 +86,8 @@ static const NSTimeInterval gyroMin = 0.1;
     self.isCreateFile = NO;
     
     self.swAI = [[SWAI alloc] init];
+    
+    _playbackMode  = NO;
 }
 
 -(void) operateFile{
@@ -117,6 +120,12 @@ static const NSTimeInterval gyroMin = 0.1;
     if ([mManager isAccelerometerAvailable] == YES) {
         [mManager setAccelerometerUpdateInterval:updateInterval];
         [mManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
+            
+            if (self.playbackMode) {
+                return ;
+            }
+            
+            
             [weakSelf.graphView addX:accelerometerData.acceleration.x y:accelerometerData.acceleration.y z:accelerometerData.acceleration.z];
             [weakSelf setLabelValueX:accelerometerData.acceleration.x y:accelerometerData.acceleration.y z:accelerometerData.acceleration.z];
             
@@ -168,6 +177,12 @@ static const NSTimeInterval gyroMin = 0.1;
     }else if(state == ESW_Stop){
         self.carStateLabel.text = [NSString stringWithFormat:@"%@ 到站",timeStr];
     }
+    
+    if (self.playbackMode) {
+        [self.carStateLabel setTextColor:[UIColor redColor]];
+    }else{
+        [self.carStateLabel setTextColor:[UIColor blackColor]];
+    }
 }
 
 -(IBAction) carStart:(id)sender{
@@ -182,13 +197,67 @@ static const NSTimeInterval gyroMin = 0.1;
     self.state = -4;
 }
 
+-(IBAction) reportError:(id)sender{
+    
+    self.state = 8;
+}
+
 -(IBAction) runing:(id)sender{
     
     NSLog(@"running");
     self.state = 1;
 }
 
+-(IBAction) playback:(id)sender{
 
+    if (self.playbackMode) {
+        
+        UIAlertView *aler = [[UIAlertView alloc] initWithTitle:@"回放中" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:nil, nil];
+        [aler show];
+        return;
+    }
+    
+    self.playbackMode = YES;
+    
+    self.swAI = [[SWAI alloc] init];
+    
+    __block long startTimes = 0;
+    __block long stopTimes = 0;
+    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        
+        NSArray *unitAry = [self.saveFile getAryWithFile];
+        
+        for (NSDictionary *dic in unitAry) {
+            
+            double x = [dic[@"x"] doubleValue];
+            double y = [dic[@"y"] doubleValue];
+            double z = [dic[@"z"] doubleValue];
+            
+            ESuyWayState state =  [self.swAI getStateWithX:x withY:y];
+            if (state == ESW_Start) {
+                startTimes ++;
+            }else if(state == ESW_Stop){
+                stopTimes ++;
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self showCarState:state];
+                [self setLabelValueX:x y:y z:z];
+            });
+        
+            usleep(10000);
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.carStateLabel.text = [NSString stringWithFormat:@"start %ld; stop %ld", startTimes, stopTimes];
+        });
+        
+        sleep(5);
+        self.playbackMode = NO;
+    });
+    
+   
+}
 
 
 @end

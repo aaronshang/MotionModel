@@ -14,4 +14,7 @@
 -(NSString*) getFileName;
 -(void) writeFile:(NSArray *)ary;
 
+
+-(NSArray*) getAryWithFile;
+
 @end

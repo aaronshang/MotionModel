@@ -52,4 +52,17 @@
     }
 }
 
+-(NSArray*) getAryWithFile{
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *name = [documentsDirectory stringByAppendingPathComponent:@"a.json"];
+    
+    NSData *data = [NSData dataWithContentsOfFile:name];
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+    
+    NSLog(@"%@", jsonObject);
+    return jsonObject;
+}
+
 @end
